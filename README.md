@@ -1,13 +1,10 @@
-# anon
-
-[![Build Status](https://secure.travis-ci.org/edsu/anon.png)](http://travis-ci.org/edsu/anon)
-[![Gitter chat](https://badges.gitter.im/edsu/anon.png)](https://gitter.im/edsu/anon)
+# OverheidEdits
 
 This little coffee script will watch Wikipedia for edits from a set of
 named IP ranges and will tweet when it notices one.  It was inspired by
 [@parliamentedits](https://twitter.com/parliamentedits) and is used to make
-[@congressedits](https://twitter.com/congressedits) available. It is now being
-used a [community](#community) of users to post selected Wikipedia edits to 
+[@OverheidEdits](https://twitter.com/OverheidEdits) available. It is now being
+used a [community](#community) of users to post selected Wikipedia edits to
 Twitter.
 
 ## Run
@@ -16,7 +13,7 @@ To run anon you will need to:
 
 1. install [Node](http://nodejs.org)
 1. `npm install -g coffee-script`
-1. `git clone https://github.com/edsu/anon.git`
+1. `git clone https://github.com/vnglst/OverheidEdits.git`
 1. `cd anon`
 1. `npm install`
 1. `cp config.json.template config.json`
@@ -41,7 +38,7 @@ or with an array of start/end IP addresses:
 These two are equivalent, but the former is a bit faster, and easier to read.
 The latter is convenient if your range is difficult to express using a netmask.
 
-If you would like your configuration file to reference the IP addresses in 
+If you would like your configuration file to reference the IP addresses in
 the external file just use the filename. So instead of:
 
 ```javascript
