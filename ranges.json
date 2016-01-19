@@ -598,10 +598,10 @@
 	"Ministerie van Sociale Zaken en Werkgelegenheid": [
 		["195.109.214.0", "195.109.214.255"]
 	],
-	"Ministerie van Verkeer en Waterstaat": [
+	"Ministerie van Infrastructuur en Milieu": [
 		["217.77.241.89", "217.77.241.89"]
 	],
-	"Ministerie van Verkeer en Waterstaat": [
+	"Ministerie van Infrastructuur en Milieu": [
 		["131.237.0.0", "131.237.255.255"],
 		["145.31.0.0", "145.31.255.255"],
 		["145.45.0.0", "145.45.255.255"],
@@ -610,7 +610,7 @@
 	"Ministerie van Volksgezondheid, Welzijn en Sport": [
 		["195.112.182.126", "195.112.182.126"]
 	],
-	"Ministerie van VROM": [
+	"Ministerie van Infrastructuur en Milieu": [
 		["147.181.0.0", "147.181.255.255"]
 	],
 	"Politie Regio IJsselland": [
