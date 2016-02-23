@@ -24,6 +24,11 @@ app you create has read/write permission so it can tweet)
 1. `./anon.coffee` (you may want to use our shared instance in Wikimedia Labs,
 see below)
 
+## Deploy on server
+
+- With a [Crontab script](https://gist.github.com/vnglst/12c6a0ffeeacd2de3b92)
+- Or an [Upstart script](https://gist.github.com/vnglst/12c6a0ffeeacd2de3b92)
+
 ### IP Ranges
 
 You will notice in the example `config.json.template` that you can configure
