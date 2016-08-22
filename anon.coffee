@@ -9,7 +9,7 @@ Mustache      = require 'mustache'
 
 argv = minimist process.argv.slice(2), default:
   verbose: false
-  config: './config.json'
+  config: '../config.json'
 
 address = (ip) ->
   if ':' in ip
