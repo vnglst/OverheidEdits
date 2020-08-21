@@ -1,26 +1,26 @@
 {
-    apps: [{
-            name: "OverheidEdits",
-            script: "anon.coffee",
-            exec_interpreter: "coffee",
-            env: {
-                COMMON_VARIABLE: "true"
-            },
-            env_production: {
-                NODE_ENV: "production"
-            }
-        },
-
-    ],
-
-    deploy: {
-        production: {
-            user: "pi",
-            host: "raspberrypi.local",
-            ref: "origin/master",
-            repo: "git@github.com:vnglst/OverheidEdits.git",
-            path: "/var/www/OverheidEdits",
-            "post-deploy": "npm install && pm2 startOrRestart ecosystem.json --env production"
-        }
+  "apps": [
+    {
+      "name": "OverheidEdits",
+      "script": "anon.coffee",
+      "exec_interpreter": "coffee",
+      "env": {
+        "COMMON_VARIABLE": "true"
+      },
+      "env_production": {
+        "NODE_ENV": "production"
+      }
     }
+  ],
+
+  "deploy": {
+    "production": {
+      "user": "pi",
+      "host": "raspberrypi.local",
+      "ref": "origin/master",
+      "repo": "git@github.com:vnglst/OverheidEdits.git",
+      "path": "/var/www/OverheidEdits",
+      "post-deploy": "npm install && pm2 startOrRestart ecosystem.json --env production"
+    }
+  }
 }
