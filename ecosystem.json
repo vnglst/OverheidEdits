@@ -2,8 +2,7 @@
   "apps": [
     {
       "name": "OverheidEdits",
-      "script": "anon.coffee",
-      "exec_interpreter": "coffee",
+      "script": "anon.js",
       "env": {
         "COMMON_VARIABLE": "true"
       },
