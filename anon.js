@@ -54,7 +54,7 @@ function inspect(account, edit) {
   let status;
 
   if (argv.verbose) {
-    console.log(edit.url);
+    console.log(edit.url + " by ", edit.user);
   }
 
   if (
