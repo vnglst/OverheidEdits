@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-
-const ipv6 = require("ipv6");
 const async = require("async");
 const Twit = require("twit");
 const minimist = require("minimist");
-const Mustache = require("mustache");
 const { WikiChanges } = require("wikichanges");
+
+const { isIpInAnyRange } = require("./utils/ip");
+const { getStatus } = require("./utils/twitter");
+const { isRepeat } = require("./utils/throttle");
 
 const argv = minimist(process.argv.slice(2), {
   default: {
@@ -13,45 +14,6 @@ const argv = minimist(process.argv.slice(2), {
     config: "./config.json",
   },
 });
-
-const address = function (ip) {
-  if (ip.includes(":")) return new ipv6.v6.Address(ip);
-  const i = new ipv6.v4.Address(ip);
-  const subnetMask = 96 + i.subnetMask;
-  ip = "::ffff:" + i.toV6Group() + "/" + subnetMask;
-  return new ipv6.v6.Address(ip);
-};
-
-const ipToInt = function (ip) {
-  const i = address(ip);
-  return i.bigInteger();
-};
-
-const compareIps = function (ip1, ip2) {
-  const r = ipToInt(ip1).compareTo(ipToInt(ip2));
-  if (r === 0) return 0;
-  if (r > 0) return 1;
-  return -1;
-};
-
-const isIpInRange = function (ip, block) {
-  if (Array.isArray(block)) {
-    return compareIps(ip, block[0]) >= 0 && compareIps(ip, block[1]) <= 0;
-  }
-
-  const a = address(ip);
-  const b = address(block);
-  return a.isInSubnet(b);
-};
-
-const isIpInAnyRange = function (ip, blocks) {
-  for (let block of Array.from(blocks)) {
-    if (isIpInRange(ip, block)) {
-      return true;
-    }
-  }
-  return false;
-};
 
 const getConfig = function (path) {
   const config = loadJson(path);
@@ -72,45 +34,6 @@ var loadJson = function (path) {
     path = "./" + path;
   }
   return require(path);
-};
-
-const getStatusLength = function (edit, name, template) {
-  // https://support.twitter.com/articles/78124-posting-links-in-a-tweet
-  const fakeUrl = "http://t.co/BzHLWr31Ce";
-
-  const status = Mustache.render(template, {
-    name,
-    url: fakeUrl,
-    page: edit.page,
-  });
-
-  return status.length;
-};
-
-const getStatus = function (edit, name, template) {
-  let page = edit.page;
-  const len = getStatusLength(edit, name, template);
-
-  if (len > 280) {
-    const newLength = edit.page.length - (len - 139);
-    page = edit.page.slice(0, +newLength + 1 || undefined);
-  }
-
-  return Mustache.render(template, {
-    name,
-    url: edit.url,
-    page,
-  });
-};
-
-const lastChange = {};
-
-const isRepeat = function (edit) {
-  const k = `${edit.wikipedia}`;
-  const v = `${edit.page}:${edit.user}`;
-  const r = lastChange[k] === v;
-  lastChange[k] = v;
-  return r;
 };
 
 const tweet = function (account, status, edit) {
@@ -215,10 +138,5 @@ if (require.main === module) {
 }
 
 // for testing
-exports.address = address;
-exports.compareIps = compareIps;
-exports.isIpInRange = isIpInRange;
-exports.isIpInAnyRange = isIpInAnyRange;
-exports.ipToInt = ipToInt;
 exports.getStatus = getStatus;
 exports.main = main;

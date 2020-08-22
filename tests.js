@@ -1,10 +1,7 @@
-const anon = require("./anon");
+/* eslint-disable */
 const { assert } = require("chai");
-
-const { getStatus } = anon;
-const { compareIps } = anon;
-const { isIpInRange } = anon;
-const { isIpInAnyRange } = anon;
+const { compareIps, isIpInRange, isIpInAnyRange } = require("./utils/ip");
+const { getStatus } = require("./utils/twitter");
 
 describe("compareIps ipv4", function () {
   it("equal", () => assert.equal(0, compareIps("1.1.1.1", "1.1.1.1")));
