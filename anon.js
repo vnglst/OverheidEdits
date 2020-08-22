@@ -68,6 +68,7 @@ function inspect(account, edit) {
     account.namespaces != null &&
     !Array.from(account.namespaces).includes(edit.namespace)
   ) {
+    // fix this
   } else if (account.ranges && edit.anonymous) {
     return (() => {
       const result = [];
@@ -94,23 +95,22 @@ const checkConfig = function (config, error) {
 };
 
 function canTweet(account, error) {
+  function handleTestGet(err, data, response) {
+    const a = account["access_token"];
+    if (err) {
+      return error(err + " for access_token " + a);
+    } else if (
+      !response.headers["x-access-level"] ||
+      response.headers["x-access-level"].substring(0, 10) !== "read-write"
+    ) {
+      return error("no read-write permission for access token " + a);
+    } else {
+      return error(null);
+    }
+  }
+
   try {
     const twitter = new Twit(account);
-    const a = account["access_token"];
-
-    function handleTestGet(err, data, response) {
-      if (err) {
-        return error(err + " for access_token " + a);
-      } else if (
-        !response.headers["x-access-level"] ||
-        response.headers["x-access-level"].substring(0, 10) !== "read-write"
-      ) {
-        return error("no read-write permission for access token " + a);
-      } else {
-        return error(null);
-      }
-    }
-
     return twitter.get("search/tweets", { q: "cats" }, handleTestGet);
   } catch (err) {
     return error(
@@ -133,10 +133,4 @@ function main() {
   });
 }
 
-if (require.main === module) {
-  main();
-}
-
-// for testing
-exports.getStatus = getStatus;
-exports.main = main;
+main();
