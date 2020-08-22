@@ -26,6 +26,7 @@ const getStatus = function (edit, name, template) {
     name,
     url: edit.url,
     page,
+    ip: edit.user,
   });
 };
 
