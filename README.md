@@ -1,11 +1,15 @@
 # OverheidEdits
 
-This little coffee script will watch Wikipedia for edits from a set of
+This little script will watch Wikipedia for edits from a set of
 named IP ranges and will tweet when it notices one.  It was inspired by
 [@parliamentedits](https://twitter.com/parliamentedits) and is used to make
 [@OverheidEdits](https://twitter.com/OverheidEdits) available. It is now being
 used a [community](#community) of users to post selected Wikipedia edits to
 Twitter.
+
+## Background
+
+Information about the Twitter bot this was based on can be found on Wikipedia: https://en.wikipedia.org/wiki/CongressEdits
 
 ## Run
 
