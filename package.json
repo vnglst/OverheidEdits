@@ -12,7 +12,8 @@
     "mustache": "2.3.0",
     "puppeteer": "^5.3.0",
     "twit": "^2.2.11",
-    "wikichanges": "^0.2.9"
+    "wikichanges": "^0.2.9",
+    "eslint": "^7.7.0"
   },
   "devDependencies": {
     "mocha": "latest",
@@ -24,6 +25,7 @@
   "scripts": {
     "test": "mocha --colors --reporter spec test.js",
     "start": "node anon.js",
-    "mastodon": "node utils/mastodon.js"
+    "mastodon": "node utils/mastodon.js",
+    "lint": "eslint **/**.js anon.js"
   }
 }
