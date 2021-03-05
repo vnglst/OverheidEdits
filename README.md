@@ -1,23 +1,28 @@
-# OverheidEdits
+# anon
 
-This little script will watch Wikipedia for edits from a set of
-named IP ranges and will tweet when it notices one.  It was inspired by
-[@parliamentedits](https://twitter.com/parliamentedits) and is used to make
-[@OverheidEdits](https://twitter.com/OverheidEdits) available. It is now being
-used a [community](#community) of users to post selected Wikipedia edits to
-Twitter.
+[![Build Status](https://secure.travis-ci.org/edsu/anon.svg)](http://travis-ci.org/edsu/anon)
+[![Gitter chat](https://badges.gitter.im/edsu/anon.svg)](https://gitter.im/edsu/anon)
 
-## Background
+anon will watch Wikipedia for *anonymous* edits from a set of named IP ranges
+and will tweet when it notices one. It was inspired by
+[@parliamentedits](https://twitter.com/parliamentedits) and was used to make
+[@congressedits](https://twitter.com/congressedits) available until the account
+was suspended by Twitter in 2018. An archive of the @congressedits tweets up
+until that point is [available](https://edsu.github.io/congressedits-archive/).
+For more about why the @congressedits accounts was suspended see [this
+article](http://thewikipedian.net/2019/01/17/congressedits-twitter-suspended/)
+from The Wikipedian. anon is now being used by a [community](#community) of
+users to post selected Wikipedia edits to Twitter.
 
-Information about the Twitter bot this was based on can be found on Wikipedia: https://en.wikipedia.org/wiki/CongressEdits
+anon can also send updates on [GNU Social /
+Mastodon](https://github.com/tootsuite/mastodon) (see below)
 
 ## Run
 
 To run anon you will need to:
 
-1. install [Node](http://nodejs.org)
-1. `npm install -g coffee-script`
-1. `git clone https://github.com/vnglst/OverheidEdits.git`
+1. install [Node](http://nodejs.org) (v6 or higher)
+1. `git clone https://github.com/edsu/anon.git`
 1. `cd anon`
 1. `npm install`
 1. `cp config.json.template config.json`
@@ -25,13 +30,8 @@ To run anon you will need to:
 app you create has read/write permission so it can tweet)
 1. add IP ranges/names to `config.json`
 1. modify status template if desired
-1. `./anon.coffee` (you may want to use our shared instance in Wikimedia Labs,
-see below)
-
-## Deploy on server
-
-- With a [Crontab script](https://gist.github.com/vnglst/12c6a0ffeeacd2de3b92)
-- Or an [Upstart script](https://gist.github.com/vnglst/12c6a0ffeeacd2de3b92)
+1. `./anon.js` (you may want to use our shared instance in Wikimedia Labs, see
+   below)
 
 ### IP Ranges
 
@@ -47,7 +47,7 @@ or with an array of start/end IP addresses:
 These two are equivalent, but the former is a bit faster, and easier to read.
 The latter is convenient if your range is difficult to express using a netmask.
 
-If you would like your configuration file to reference the IP addresses in
+If you would like your configuration file to reference the IP addresses in 
 the external file just use the filename. So instead of:
 
 ```javascript
@@ -88,18 +88,26 @@ you would have:
 }
 ```
 
+### Mastodon
+
+If you want to send messages on Mastodon you'll need to create an application
+and then get an access token for the account you want to send on. A utility is
+included to help you do that:
+
+    npm run mastodon
+
 ### Debugging
 
 If you would like to test without tweeting you can run anon with the
 `--noop` flag, which will cause the tweet to be written to the console
 but not actually sent to Twitter.
 
-    ./anon.coffee --noop
+    ./anon.js --noop
 
 If you would like to see all the change activity (URLs for each change) to test
 that it is actually listening, use the `--verbose` flag:
 
-    ./anon.coffee --verbose
+    ./anon.js --verbose
 
 ### Alternate Configuration Files
 
@@ -107,7 +115,7 @@ By default anon will look for a `config.json` file in your current working
 directory. If you would like to specify the location of the configuration
 file, use the `--config` parameter:
 
-    ./anon.coffee --config test.config
+    ./anon.js --config test.config
 
 ### Running on Wikimedia Labs
 
@@ -115,6 +123,19 @@ We have a shared instance of anon running on [Wikimedia
 Labs](http://tools.wmflabs.org/anon). This is useful once you have a
 configuration that is working and you'd like to have the running instance
 in labs use it.
+
+## With Docker
+
+### Build image
+
+1. git clone the repo
+1. `cd anon`
+1. `docker build . -t anon`
+
+### Run image
+
+1. create your `config.json` file
+1. `docker run -v $PWD/config.json:/opt/anon/config.json anon`
 
 ## Develop
 
@@ -170,8 +191,10 @@ Here are the Wikipedias that it currently supports:
 * [Ukrainian](https://uk.wikipedia.org)
 * [Vietnamese](https://vi.wikipedia.org)
 * [Volapük](https://vo.wikipedia.org)
-* [Wikidata](https://wd.wikipedia.org)
-* [Wikimedia Commons](https://co.wikipedia.org)
+
+Additionally, the following miscellaneous Wikimedia sites: 
+* [Wikidata](https://wikidata.org)
+* [Wikimedia Commons](https://commons.wikimedia.org)
 
 If you would like to have another one added please add a ticket to the
 [wikichanges](https://github.com/edsu/wikichanges/issues)
@@ -185,8 +208,11 @@ own by sending a pull request.
 * [@2dekameredits](https://twitter.com/2dekameredits)
 * [@5thEstateWiki](https://twitter.com/5thEstateWiki)
 * [@academyedits](https://twitter.com/academyedits)
+* [@AnonGoIWPEdits](https://twitter.com/anongoiwpedits)
+* [@atWikiEdits](https://twitter.com/atWikiEdits)
 * [@AUSgovEdits](https://twitter.com/AUSgovEdits)
 * [@AussieParlEdits](https://twitter.com/AussieParlEdits)
+* [@bankedits](https://twitter.com/bankedits)
 * [@bcgovedits](https://twitter.com/bcgovedits)
 * [@bclegedits](https://twitter.com/bclegedits)
 * [@beehive_edits](https://twitter.com/beehive_edits)
@@ -198,11 +224,16 @@ own by sending a pull request.
 * [@ciaedits](https://twitter.com/ciaedits)
 * [@cmuedits](https://twitter.com/cmuedits)
 * [@congresseditors](https://twitter.com/congresseditors)
-* [@congressedits](https://twitter.com/congressedits)
+* [@congressedits](https://edsu.github.io/congressedits-archive/) **Banned** 
+  * [@congressedits on mastodon](https://botsin.space/@congressedits)
+* [@CPDWikiEdits](https://twitter.com/CPDWikiEdits)
 * [@DailEireannEdit](https://twitter.com/DailEireannEdit)
+* [@DoDEdits](https://twitter.com/DoDEdits)
+* [@EagleWikiEdits](https://twitter.com/EagleWikiEdits)
 * [@EduskuntaEdit](https://twitter.com/EduskuntaEdit)
 * [@EstadoEdita](https://twitter.com/EstadoEdita)
 * [@euroedit](https://twitter.com/euroedit)
+* [@FinlandEdits](https://twitter.com/FinlandEdits)
 * [@FloridaEdits](https://twitter.com/FloridaEdits)
 * [@FTingetWikiEdit](https://twitter.com/FTingetWikiEdit)
 * [@gccaedits](https://twitter.com/gccaedits)
@@ -220,12 +251,15 @@ own by sending a pull request.
 * [@lc_edits](https://twitter.com/lc_edits)
 * [@LRSwikiedits](https://twitter.com/LRSwikiedits)
 * [@michigan_edits](https://twitter.com/michigan_edits)
+* [@MinistEditor](https://twitter.com/MinistEditor)
 * [@MITedits](https://twitter.com/MITedits)
 * [@monsantoedits](https://twitter.com/monsantoedits)
 * [@NATOedits](https://twitter.com/NATOedits)
 * [@NCGAedits](https://twitter.com/NCGAedits)
 * [@nsaedits](https://twitter.com/nsaedits)
 * [@nsgovedits](https://twitter.com/nsgovedits)
+* [@NYPDedits](https://twitter.com/NYPDedits)
+* [@ODTUedits](https://twitter.com/ODTUedits)
 * [@oiledits](https://twitter.com/oiledits)
 * [@ONgovEdits](https://twitter.com/ONgovEdits)
 * [@OverheidEdits](https://twitter.com/OverheidEdits)
@@ -245,14 +279,21 @@ own by sending a pull request.
 * [@RuGovEdits](https://twitter.com/RuGovEdits)
 * [@stanfordedits](https://twitter.com/stanfordedits)
 * [@swissgovedit](https://twitter.com/swissgovedit)
+* [@TBMMedits](https://twitter.com/TBMMedits)
+* [@TSKedits](https://twitter.com/TSKedits)
 * [@UaGovEdits_en](https://twitter.com/UaGovEdits_en)
 * [@UaGovEdits](https://twitter.com/UaGovEdits)
 * [@UaGoveEdits_ru](https://twitter.com/UaGovEdits_ru)
+* [@UBCEdits](https://twitter.com/UBCEdits)
+* [@uc_wiki_edits](https://twitter.com/uc_wiki_edits)
+* [@UChicago_edits](https://twitter.com/UChicago_edits)
+* [@UGAediting](https://twitter.com/UGAediting)
 * [@un_edits](https://twitter.com/un_edits)
 * [@valleyedits](https://twitter.com/valleyedits)
 * [@WhitehallEdits](https://twitter.com/WhitehallEdits)
-* [@WikiCreeperEdit](https://twitter.com/WikiCreeperEdit)
+* [@whitehousedits](https://twitter.com/whitehousedits)
 * [@wikiAssemblee](https://twitter.com/wikiAssemblee)
+* [@WikiCreeperEdit](https://twitter.com/WikiCreeperEdit)
 * [@wikistorting](https://twitter.com/wikistorting)
 * [@zagovedits](https://twitter.com/zagovedits)
 
