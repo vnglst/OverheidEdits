@@ -23,8 +23,8 @@ function address(ip) {
   } else {
     const i = new Address4(ip)
     const subnetMask = 96 + i.subnetMask
-    ip = `::ffff:${i.toGroup6()}/${subnetMask}`
-    return new Address6(ip)
+    const newIp = `::ffff:${i.toGroup6()}/${subnetMask}`
+    return new Address6(newIp)
   }
 }
 
@@ -282,7 +282,7 @@ function main() {
       const wikipedia = new WikiChanges({ ircNickname: config.nick })
       return wikipedia.listen((edit) => {
         if (argv.verbose) {
-          console.log(JSON.stringify(edit))
+          console.log(JSON.stringify(edit, null, 4))
         }
         Array.from(config.accounts).map((account) => inspect(account, edit))
       })

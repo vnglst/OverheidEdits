@@ -5,6 +5,7 @@ module.exports = {
     commonjs: true,
     es2020: true,
     browser: true,
+    mocha: true,
   },
   parserOptions: {
     ecmaVersion: 11,
