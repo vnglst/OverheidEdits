@@ -183,7 +183,6 @@ async function sendStatus(account, status, edit) {
       twitter.post('media/upload', { media_data: b64content }, function (
         err,
         data,
-        response,
       ) {
         if (err) {
           console.log(err)
@@ -195,11 +194,7 @@ async function sendStatus(account, status, edit) {
         const altText = 'Screenshot of edit to ' + edit.page
         const metaParams = { media_id: mediaIdStr, alt_text: { text: altText } }
 
-        twitter.post('media/metadata/create', metaParams, function (
-          err,
-          data,
-          response,
-        ) {
+        twitter.post('media/metadata/create', metaParams, function (err) {
           if (err) {
             console.log(
               'metadata upload for twitter screenshot alt text failed with error',

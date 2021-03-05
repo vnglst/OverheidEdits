@@ -1,25 +1,13 @@
 # anon
 
-[![Build Status](https://secure.travis-ci.org/edsu/anon.svg)](http://travis-ci.org/edsu/anon)
-[![Gitter chat](https://badges.gitter.im/edsu/anon.svg)](https://gitter.im/edsu/anon)
-
-anon will watch Wikipedia for *anonymous* edits from a set of named IP ranges
-and will tweet when it notices one. It was inspired by
-[@parliamentedits](https://twitter.com/parliamentedits) and was used to make
-[@congressedits](https://twitter.com/congressedits) available until the account
-was suspended by Twitter in 2018. An archive of the @congressedits tweets up
-until that point is [available](https://edsu.github.io/congressedits-archive/).
-For more about why the @congressedits accounts was suspended see [this
-article](http://thewikipedian.net/2019/01/17/congressedits-twitter-suspended/)
-from The Wikipedian. anon is now being used by a [community](#community) of
-users to post selected Wikipedia edits to Twitter.
-
-anon can also send updates on [GNU Social /
-Mastodon](https://github.com/tootsuite/mastodon) (see below)
+This little script will watch Wikipedia for edits from a set of
+named IP ranges and will tweet when it notices one.  It was inspired by
+[@parliamentedits](https://twitter.com/parliamentedits) and is used to make
+[@OverheidEdits](https://twitter.com/OverheidEdits) available.
 
 ## Run
 
-To run anon you will need to:
+To run anon (on which @OverheidEdits is based) you will need to:
 
 1. install [Node](http://nodejs.org) (v6 or higher)
 1. `git clone https://github.com/edsu/anon.git`
