@@ -11,13 +11,15 @@
     "mastodon": "^1.1.1",
     "minimist": "^1.2.5",
     "mustache": "2.3.0",
+    "oauth": "^0.10.0",
     "puppeteer": "^19.0.0",
+    "readline-sync": "^1.4.10",
     "twit": "^2.2.11",
     "wikichanges": "^0.2.9"
   },
   "devDependencies": {
-    "mocha": "latest",
-    "chai": "latest"
+    "chai": "latest",
+    "mocha": "latest"
   },
   "engines": {
     "node": ">=12"

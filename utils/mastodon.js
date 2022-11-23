@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const mastodon_url = 'https://botsin.space'
+const mastodon_url = "https://maakr.social";
 
 // this script will create an app on a mastodon instance indicated with
 // the mastodon_url variable above and will then create an access token
@@ -10,27 +10,27 @@ const mastodon_url = 'https://botsin.space'
 // once complete you will be given a JSON stanza to add to the account
 // in your config.json that you want to have messages sent to on Mastodon
 
-require('mastodon')
-const oauth = require('oauth')
-const request = require('request')
-const readline = require('readline-sync')
+require("mastodon");
+const oauth = require("oauth");
+const request = require("request");
+const readline = require("readline-sync");
 
 const createApp = () =>
   request.post(
     {
-      url: mastodon_url + '/api/v1/apps',
+      url: mastodon_url + "/api/v1/apps",
       form: {
-        client_name: 'anon',
-        redirect_uris: 'urn:ietf:wg:oauth:2.0:oob',
-        scopes: 'read write follow',
-        website: 'https://github.com/edsu/anon',
+        client_name: "anon",
+        redirect_uris: "urn:ietf:wg:oauth:2.0:oob",
+        scopes: "read write follow",
+        website: "https://github.com/edsu/anon",
       },
     },
     function (e, r, body) {
-      const app = JSON.parse(body)
-      return authorize(app)
-    },
-  )
+      const app = JSON.parse(body);
+      return authorize(app);
+    }
+  );
 
 var authorize = function (app) {
   const auth = new oauth.OAuth2(
@@ -38,35 +38,35 @@ var authorize = function (app) {
     app.client_secret,
     mastodon_url,
     null,
-    '/oauth/token',
-  )
+    "/oauth/token"
+  );
 
   const url = auth.getAuthorizeUrl({
-    redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-    response_type: 'code',
-    scope: 'read write follow',
-  })
+    redirect_uri: "urn:ietf:wg:oauth:2.0:oob",
+    response_type: "code",
+    scope: "read write follow",
+  });
 
-  console.log('')
+  console.log("");
   console.log(
-    'Please visit this url in your browser, authorize and then enter the PIN',
-  )
-  console.log('')
-  console.log(url)
-  console.log('')
-  const pin = readline.question('PIN: ')
-  console.log('')
+    "Please visit this url in your browser, authorize and then enter the PIN"
+  );
+  console.log("");
+  console.log(url);
+  console.log("");
+  const pin = readline.question("PIN: ");
+  console.log("");
 
   return auth.getOAuthAccessToken(
     pin,
     {
-      grant_type: 'authorization_code',
-      redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+      grant_type: "authorization_code",
+      redirect_uri: "urn:ietf:wg:oauth:2.0:oob",
     },
     function (err, access_token) {
       if (err) {
-        console.log(err)
-        return
+        console.log(err);
+        return;
       }
 
       const config = {
@@ -74,12 +74,12 @@ var authorize = function (app) {
         client_secret: app.client_secret,
         access_token,
         api_url: mastodon_url,
-      }
+      };
 
-      console.log('add this stanza to the account in your config.json')
-      return console.log(JSON.stringify(config, null, 2))
-    },
-  )
-}
+      console.log("add this stanza to the account in your config.json");
+      return console.log(JSON.stringify(config, null, 2));
+    }
+  );
+};
 
-createApp()
+createApp();
