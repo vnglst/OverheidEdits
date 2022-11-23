@@ -17,6 +17,10 @@ const argv = minimist(process.argv.slice(2), {
   },
 });
 
+function log(msg) {
+  return console.log(`[${new Date().toLocaleString()}] ${msg}`);
+}
+
 function address(ip) {
   if (Array.from(ip).includes(":")) {
     return new Address6(ip);
@@ -72,7 +76,7 @@ function getConfig(path) {
       }
     }
   }
-  console.log("loaded config from", path);
+  log("loaded config from", path);
   return config;
 }
 
@@ -153,7 +157,7 @@ async function takeScreenshot(url) {
 }
 
 async function sendStatus(account, status, edit) {
-  console.log(status);
+  log(status);
 
   if (!argv.noop && (!account.throttle || !isRepeat(edit))) {
     const screenshot = await takeScreenshot(edit.url);
@@ -165,14 +169,14 @@ async function sendStatus(account, status, edit) {
         file: fs.createReadStream(screenshot),
       });
       if (!response.data.id) {
-        console.log("error uploading screenshot to mastodon");
+        log("error uploading screenshot to mastodon");
         return;
       }
 
       await mastodon.post(
         "statuses",
         { status: status, media_ids: [response.data.id] },
-        (err) => console.log(`mastodon post failed: ${err}`)
+        (err) => log(`mastodon post failed: ${err}`)
       );
     }
 
@@ -187,7 +191,7 @@ async function sendStatus(account, status, edit) {
         { media_data: b64content },
         function (err, data) {
           if (err) {
-            console.log(err);
+            log(err);
             return;
           }
 
@@ -201,7 +205,7 @@ async function sendStatus(account, status, edit) {
 
           twitter.post("media/metadata/create", metaParams, function (err) {
             if (err) {
-              console.log(
+              log(
                 "metadata upload for twitter screenshot alt text failed with error",
                 err
               );
@@ -212,7 +216,7 @@ async function sendStatus(account, status, edit) {
             };
             twitter.post("statuses/update", params, function (err) {
               if (err) {
-                console.log(err);
+                log(err);
               }
             });
             fs.unlinkSync(screenshot);
@@ -288,12 +292,12 @@ function main() {
       const wikipedia = new WikiChanges({ ircNickname: config.nick });
       return wikipedia.listen((edit) => {
         if (argv.verbose) {
-          console.log(JSON.stringify(edit, null, 4));
+          log(JSON.stringify(edit, null, 4));
         }
         Array.from(config.accounts).map((account) => inspect(account, edit));
       });
     } else {
-      return console.log(err);
+      return log(err);
     }
   });
 }
