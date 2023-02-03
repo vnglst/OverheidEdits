@@ -233,7 +233,7 @@ let TESTED = false;
 
 function inspect(account, edit) {
   if (edit.url) {
-    if (!TESTED && edit.url.startsWith("https://en")) {
+    if (!TESTED && edit.url.startsWith("https://nl")) {
       TESTED = true;
       const status = getStatus(edit, "TEST POST, IGNORE", account.template);
       sendStatus(account, status, edit).catch(console.error);
