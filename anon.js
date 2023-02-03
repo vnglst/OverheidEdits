@@ -174,11 +174,12 @@ async function sendStatus(account, status, edit) {
         return;
       }
 
-      await mastodon.post(
-        "statuses",
-        { status: status, media_ids: [response.data.id] },
-        (err) => log(`mastodon post failed: ${err}`)
-      );
+      mastodon
+        .post("statuses", {
+          status: status,
+          media_ids: [response.data.id],
+        })
+        .catch((err) => console.log("error posting to mastodon", err));
     }
 
     // Twitter
@@ -232,7 +233,7 @@ let TESTED = false;
 
 function inspect(account, edit) {
   if (edit.url) {
-    if (!TESTED) {
+    if (!TESTED && edit.url.startsWith("https://en")) {
       TESTED = true;
       const status = getStatus(edit, "TEST POST, IGNORE", account.template);
       sendStatus(account, status, edit).catch(console.error);
