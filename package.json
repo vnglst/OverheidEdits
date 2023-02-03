@@ -12,7 +12,7 @@
     "minimist": "^1.2.5",
     "mustache": "2.3.0",
     "oauth": "^0.10.0",
-    "puppeteer": "^19.0.0",
+    "puppeteer": "^19.6.3",
     "readline-sync": "^1.4.10",
     "twit": "^2.2.11",
     "wikichanges": "^0.2.9"

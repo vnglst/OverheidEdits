@@ -127,6 +127,7 @@ async function takeScreenshot(url) {
     headless: true,
     defaultViewport: null,
     args: ["--no-sandbox"],
+    // enable this for Raspberry Pi
     executablePath: "chromium-browser",
   });
   const page = await browser.newPage();
@@ -227,8 +228,16 @@ async function sendStatus(account, status, edit) {
   }
 }
 
+let TESTED = false;
+
 function inspect(account, edit) {
   if (edit.url) {
+    if (!TESTED) {
+      TESTED = true;
+      const status = getStatus(edit, "TEST POST, IGNORE", account.template);
+      sendStatus(account, status, edit).catch(console.error);
+    }
+
     if (
       account.whitelist &&
       account.whitelist[edit.wikipedia] &&
