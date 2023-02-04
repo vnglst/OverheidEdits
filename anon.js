@@ -235,7 +235,9 @@ function inspect(account, edit) {
   if (edit.url) {
     if (!TESTED && edit.url.startsWith("https://nl")) {
       TESTED = true;
-      const status = getStatus(edit, "TEST POST, IGNORE", account.template);
+      const status =
+        `@koen@maakr.social I just restarted, here's a quick test: ` +
+        getStatus(edit, "TEST POST, IGNORE", account.template);
       sendStatus(account, status, edit).catch(console.error);
     }
 
