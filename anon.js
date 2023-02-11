@@ -17,8 +17,11 @@ const argv = minimist(process.argv.slice(2), {
   },
 });
 
-function log(msg) {
-  return console.log(`[${new Date().toLocaleString()}] ${msg}`);
+function log(msg, data) {
+  return console.log(
+    `[${new Date().toLocaleString()}] ${msg}`,
+    data ? data : ""
+  );
 }
 
 function address(ip) {
@@ -166,8 +169,10 @@ async function sendStatus(account, status, edit) {
     // Mastodon
     if (account.mastodon) {
       const mastodon = new Mastodon(account.mastodon);
+      const altText = "Screenshot of edit to " + edit.page;
       const response = await mastodon.post("media", {
         file: fs.createReadStream(screenshot),
+        description: altText,
       });
       if (!response.data.id) {
         log("error uploading screenshot to mastodon");
@@ -179,7 +184,7 @@ async function sendStatus(account, status, edit) {
           status: status,
           media_ids: [response.data.id],
         })
-        .catch((err) => console.log("error posting to mastodon", err));
+        .catch((err) => log("error posting to mastodon", err));
     }
 
     // Twitter
@@ -229,17 +234,9 @@ async function sendStatus(account, status, edit) {
   }
 }
 
-let TESTED = false;
-
 function inspect(account, edit) {
   if (edit.url) {
-    if (!TESTED && edit.url.startsWith("https://nl")) {
-      TESTED = true;
-      const status =
-        `@koen@maakr.social I just restarted, here's a quick test: ` +
-        getStatus(edit, "TEST POST, IGNORE", account.template);
-      sendStatus(account, status, edit).catch(console.error);
-    }
+    sendRestartMsg(account, edit);
 
     if (
       account.whitelist &&
@@ -257,6 +254,57 @@ function inspect(account, edit) {
         }
       }
     }
+  }
+}
+
+let SHOULD_SEND_TEST = true;
+
+async function sendRestartMsg(account, edit) {
+  if (argv.noop) return;
+  if (!SHOULD_SEND_TEST) return;
+  if (!edit.url.startsWith("https://nl")) return;
+  SHOULD_SEND_TEST = false;
+
+  if (account.mastodon) {
+    const screenshot = await takeScreenshot(edit.url);
+    const mastodon = new Mastodon(account.mastodon);
+    const altText = "Screenshot of edit to " + edit.url;
+    const response = await mastodon.post("media", {
+      file: fs.createReadStream(screenshot),
+      description: altText,
+    });
+    if (!response.data.id) {
+      log("error uploading screenshot to mastodon");
+      return;
+    }
+
+    mastodon
+      .post("statuses", {
+        status:
+          "@koen@maakr.social I just restarted. Here's a test screenshot of a recent edit.",
+        visibility: "direct",
+        media_ids: [response.data.id],
+      })
+      .catch((err) => log("error posting to mastodon", err));
+
+    log("sent Mastodon test message");
+
+    fs.unlinkSync(screenshot);
+  }
+
+  if (account.access_token) {
+    const twitter = new Twit(account);
+    twitter.post(
+      "statuses/update",
+      { status: "@vnglst I just restarted. Should be fine." },
+      function (err) {
+        if (err) {
+          log(err);
+        } else {
+          log("sent Twitter test message");
+        }
+      }
+    );
   }
 }
 
