@@ -281,7 +281,7 @@ async function sendRestartMsg(account, edit) {
     mastodon
       .post("statuses", {
         status:
-          "@koen@maakr.social I just restarted. Here's a test screenshot of a recent edit.",
+          "@vnglst@hachyderm.io I just restarted. Here's a test screenshot of a recent edit.",
         visibility: "direct",
         media_ids: [response.data.id],
       })
