@@ -18,10 +18,7 @@ const argv = minimist(process.argv.slice(2), {
 });
 
 function log(msg, data) {
-  return console.log(
-    `[${new Date().toLocaleString()}] ${msg}`,
-    data ? data : ""
-  );
+  return console.log(`[${new Date().toLocaleString()}] ${msg}`, data ? data : "");
 }
 
 function address(ip) {
@@ -129,9 +126,9 @@ async function takeScreenshot(url) {
   const browser = await puppeteer.launch({
     headless: true,
     defaultViewport: null,
-    args: ["--no-sandbox"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
     // enable this for Raspberry Pi
-    executablePath: "chromium-browser",
+    // executablePath: "chromium-browser",
   });
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: "networkidle2" });
@@ -193,43 +190,36 @@ async function sendStatus(account, status, edit) {
       const b64content = fs.readFileSync(screenshot, { encoding: "base64" });
 
       // upload the screenshot to twitter
-      twitter.post(
-        "media/upload",
-        { media_data: b64content },
-        function (err, data) {
-          if (err) {
-            log(err);
-            return;
-          }
-
-          // add alt text for the media, for use by screen readers
-          const mediaIdStr = data.media_id_string;
-          const altText = "Screenshot of edit to " + edit.page;
-          const metaParams = {
-            media_id: mediaIdStr,
-            alt_text: { text: altText },
-          };
-
-          twitter.post("media/metadata/create", metaParams, function (err) {
-            if (err) {
-              log(
-                "metadata upload for twitter screenshot alt text failed with error",
-                err
-              );
-            }
-            const params = {
-              status: status,
-              media_ids: [mediaIdStr],
-            };
-            twitter.post("statuses/update", params, function (err) {
-              if (err) {
-                log(err);
-              }
-            });
-            fs.unlinkSync(screenshot);
-          });
+      twitter.post("media/upload", { media_data: b64content }, function (err, data) {
+        if (err) {
+          log(err);
+          return;
         }
-      );
+
+        // add alt text for the media, for use by screen readers
+        const mediaIdStr = data.media_id_string;
+        const altText = "Screenshot of edit to " + edit.page;
+        const metaParams = {
+          media_id: mediaIdStr,
+          alt_text: { text: altText },
+        };
+
+        twitter.post("media/metadata/create", metaParams, function (err) {
+          if (err) {
+            log("metadata upload for twitter screenshot alt text failed with error", err);
+          }
+          const params = {
+            status: status,
+            media_ids: [mediaIdStr],
+          };
+          twitter.post("statuses/update", params, function (err) {
+            if (err) {
+              log(err);
+            }
+          });
+          fs.unlinkSync(screenshot);
+        });
+      });
     }
   }
 }
@@ -238,11 +228,7 @@ function inspect(account, edit) {
   if (edit.url) {
     sendRestartMsg(account, edit);
 
-    if (
-      account.whitelist &&
-      account.whitelist[edit.wikipedia] &&
-      account.whitelist[edit.wikipedia][edit.page]
-    ) {
+    if (account.whitelist && account.whitelist[edit.wikipedia] && account.whitelist[edit.wikipedia][edit.page]) {
       const status = getStatus(edit, edit.user, account.template);
       sendStatus(account, status, edit);
     } else if (account.ranges && edit.anonymous) {
@@ -280,8 +266,7 @@ async function sendRestartMsg(account, edit) {
 
     mastodon
       .post("statuses", {
-        status:
-          "@vnglst@hachyderm.io I just restarted. Here's a test screenshot of a recent edit.",
+        status: "@vnglst@hachyderm.io I just restarted. Here's a test screenshot of a recent edit.",
         visibility: "direct",
         media_ids: [response.data.id],
       })
@@ -294,17 +279,13 @@ async function sendRestartMsg(account, edit) {
 
   if (account.access_token) {
     const twitter = new Twit(account);
-    twitter.post(
-      "statuses/update",
-      { status: "@vnglst I just restarted. Should be fine." },
-      function (err) {
-        if (err) {
-          log(err);
-        } else {
-          log("sent Twitter test message");
-        }
+    twitter.post("statuses/update", { status: "@vnglst I just restarted. Should be fine." }, function (err) {
+      if (err) {
+        log(err);
+      } else {
+        log("sent Twitter test message");
       }
-    );
+    });
   }
 }
 
@@ -323,22 +304,18 @@ function canTweet(account, error) {
     try {
       const twitter = new Twit(account);
       const a = account["access_token"];
-      return twitter.get(
-        "search/tweets",
-        { q: "cats" },
-        function (err, data, response) {
-          if (err) {
-            error(err + " for access_token " + a);
-          } else if (
-            !response.headers["x-access-level"] ||
-            response.headers["x-access-level"].substring(0, 10) !== "read-write"
-          ) {
-            error(`no read-write permission for access token ${a}`);
-          } else {
-            error(null);
-          }
+      return twitter.get("search/tweets", { q: "cats" }, function (err, data, response) {
+        if (err) {
+          error(err + " for access_token " + a);
+        } else if (
+          !response.headers["x-access-level"] ||
+          response.headers["x-access-level"].substring(0, 10) !== "read-write"
+        ) {
+          error(`no read-write permission for access token ${a}`);
+        } else {
+          error(null);
         }
-      );
+      });
     } catch (err) {
       error(`unable to create twitter client for account: ${account}`);
     }

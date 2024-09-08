@@ -1,0 +1,14 @@
+version: "3"
+services:
+  anon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./config.json:/app/config.json
+    secrets:
+      - config.json
+
+secrets:
+  config.json:
+    file: ./config.json
